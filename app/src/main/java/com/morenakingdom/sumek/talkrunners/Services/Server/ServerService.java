@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.morenakingdom.sumek.talkrunners.Exceptions.ServerException;
@@ -20,7 +19,9 @@ public class ServerService {
 
     List<Client> clients = null;
 
-    private Thread connectionEstablished;
+    private Thread connectionEstablishedThread;
+
+    private ConnectionEstablishedModule connectionEstablished;
 
     private List<Thread> socketListeners;
 
@@ -43,14 +44,15 @@ public class ServerService {
 
 
     void initConnectionEstablishedModule() {
-        this.connectionEstablished = new Thread(new ConnectionEstablishedModule(this));
-        this.connectionEstablished.start();
+        this.connectionEstablished = new ConnectionEstablishedModule( this );
+        this.connectionEstablishedThread = new Thread( connectionEstablished );
+        this.connectionEstablishedThread.start();
     }
 
     void addClient(Socket sock) {
         clients.add(new Client(sock));
 
-        SocketListnerModule listener = new SocketListnerModule(this, sock);
+        ServerCommunicationModule listener = new ServerCommunicationModule( this, sock );
         Thread th = new Thread(listener);
         th.start();
 

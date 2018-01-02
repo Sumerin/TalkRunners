@@ -30,7 +30,7 @@ public class ConnectDialog extends DialogFragment {
         builder.setView(view)
                 // Add action buttons
                 .setPositiveButton(R.string.connect, (dialog, id) -> {
-                    System.out.println("Connect");
+                    System.out.println( "Connect Pressed" );
                     final EditText txt = view.findViewById(R.id.IP);
                     try {
                         MainController.getInstance().connect(txt.getText().toString());
