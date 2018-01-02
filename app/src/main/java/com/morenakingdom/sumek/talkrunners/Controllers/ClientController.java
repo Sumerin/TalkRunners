@@ -14,8 +14,6 @@ public class ClientController implements ConnectionController {
 
     private static ClientController instance = null;
 
-    private Socket tcpSocket;
-
     private ClientService service;
 
     public static ClientController getInstance() {
@@ -27,7 +25,7 @@ public class ClientController implements ConnectionController {
     }
 
     private ClientController() {
-
+        service = new ClientService();
     }
 
     @Override
@@ -37,22 +35,10 @@ public class ClientController implements ConnectionController {
 
     public void connect(String ip) throws ClientException {
 
-
-
-        new Thread(() ->
+        new Thread( () ->
         {
-            try {
-                System.out.println( "Connecting..." );
-                InetAddress addr = InetAddress.getByName(ip);
-                tcpSocket = new Socket(addr, DEFAULT_PORT);
-                service = new ClientService( tcpSocket );
-            } catch (Exception e) {
-                e.printStackTrace();
-                String message = String.format("Cannot connect to the server %s : %s", ip, e.getMessage());
-                //TODO:Exception
-            }
+            service.connect( ip, DEFAULT_PORT );
         }).start();
-
 
     }
 

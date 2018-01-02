@@ -31,6 +31,7 @@ public class MainController {
 
     public void createServer(int port) throws ServerException {
         serverService = new ServerService(port);
+        serverService.initConnectionEstablishedModule();
     }
 
     public void connect(String ip) throws ClientException {

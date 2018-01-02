@@ -33,8 +33,6 @@ public class ServerService {
             this.socketListeners = new ArrayList<>();
             this.serverSocket = new ServerSocket(port);
 
-            initConnectionEstablishedModule();
-
         } catch (IOException e) {
             e.printStackTrace();
             String message = String.format("Cannot create server: %s", e.getMessage());
@@ -43,15 +41,23 @@ public class ServerService {
     }
 
 
-    void initConnectionEstablishedModule() {
+    public void initConnectionEstablishedModule() {
         this.connectionEstablished = new ConnectionEstablishedModule( this );
         this.connectionEstablishedThread = new Thread( connectionEstablished );
         this.connectionEstablishedThread.start();
     }
 
-    void addClient(Socket sock) {
-        clients.add(new Client(sock));
+    public void interruptConnectionEstablishedModule() {
+        this.connectionEstablishedThread.interrupt();
+    }
 
+    void addClient(Client client) {
+        clients.add( client );
+
+        System.out.println( "New Client" );
+    }
+
+    void startCommunication(Socket sock) {
         ServerCommunicationModule listener = new ServerCommunicationModule( this, sock );
         Thread th = new Thread(listener);
         th.start();

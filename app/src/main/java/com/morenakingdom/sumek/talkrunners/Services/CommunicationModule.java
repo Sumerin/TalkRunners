@@ -1,5 +1,6 @@
 package com.morenakingdom.sumek.talkrunners.Services;
 
+import com.morenakingdom.sumek.talkrunners.Models.Client;
 import com.morenakingdom.sumek.talkrunners.Models.Command;
 import com.morenakingdom.sumek.talkrunners.Models.ControlData;
 
@@ -32,13 +33,25 @@ public abstract class CommunicationModule implements Runnable {
     protected void initStreams() {
         try {
             this.outputStream = new ObjectOutputStream( new BufferedOutputStream( this.socket.getOutputStream() ) );
-            System.out.println( "OUTPUT Stream Initilized!!!" + this.getClass().getSimpleName() );
+            forceSend( Command.CONNECT, null );
             this.inputStream = new ObjectInputStream( new BufferedInputStream( this.socket.getInputStream() ) );
-            System.out.println( "INPUT Stream Initilized!!!" + this.getClass().getSimpleName() );
         } catch (IOException e) {
             e.printStackTrace();
             //TODO: Exception
         }
+    }
+
+
+    protected void send(Command header, Client client) throws IOException {
+        ControlData data = new ControlData();
+        data.header = header;
+        data.client = client;
+        outputStream.writeObject( data );
+    }
+
+    protected void forceSend(Command header, Client client) throws IOException {
+        send( header, client );
+        outputStream.flush();
     }
 
     @Override
@@ -62,14 +75,7 @@ public abstract class CommunicationModule implements Runnable {
 
     @Override
     public void finalize() throws Throwable {
-        sendClose();
+        forceSend( Command.DISCONNECT, null );
         super.finalize();
-    }
-
-    private void sendClose() throws IOException {
-        ControlData data = new ControlData();
-        data.header = Command.DISCONNECT;
-        data.client = null;
-        outputStream.writeObject( data );
     }
 }

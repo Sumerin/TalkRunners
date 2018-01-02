@@ -21,7 +21,7 @@ class ConnectionEstablishedModule implements Runnable {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 Socket sock = serverService.serverSocket.accept();
-                serverService.addClient(sock);
+                serverService.startCommunication( sock );
             } catch (IOException e) {
                 e.printStackTrace();
             }

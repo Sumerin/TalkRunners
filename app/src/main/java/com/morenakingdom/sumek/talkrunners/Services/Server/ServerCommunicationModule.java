@@ -32,6 +32,9 @@ class ServerCommunicationModule extends CommunicationModule {
     @Override
     protected void processData(ControlData data) {
         switch (data.header) {
+            case INTRODUCE:
+                serverService.addClient( data.client );
+                break;
             case SYNC_REQUEST:
                 System.out.println( "Sync_Request Acquired" );
                 sendSync();
@@ -45,10 +48,7 @@ class ServerCommunicationModule extends CommunicationModule {
     private void sendSync() {
         try {
             for ( Client client : serverService.clients ) {
-                ControlData sendData = new ControlData();
-                sendData.header = Command.SYNC_RESPONSE;
-                sendData.client = client;
-                outputStream.writeObject( sendData );
+                send( Command.SYNC_RESPONSE, client );
             }
         } catch (IOException e) {
             e.printStackTrace();

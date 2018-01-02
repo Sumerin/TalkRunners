@@ -1,5 +1,6 @@
 package com.morenakingdom.sumek.talkrunners.Services.Client;
 
+import com.morenakingdom.sumek.talkrunners.Models.Client;
 import com.morenakingdom.sumek.talkrunners.Models.Command;
 import com.morenakingdom.sumek.talkrunners.Models.ControlData;
 import com.morenakingdom.sumek.talkrunners.Services.CommunicationModule;
@@ -19,23 +20,12 @@ class ClientCommunicationModule extends CommunicationModule {
 
     private ClientService clientService;
 
-    protected ClientCommunicationModule(ClientService clientService, Socket socket) {
+    protected ClientCommunicationModule(ClientService clientService, Socket socket) throws IOException {
         super( socket );
         this.clientService = clientService;
-        sendSyncRequest();
-    }
-
-    private void sendSyncRequest() {
-        try {
-            ControlData data = new ControlData();
-            data.header = Command.SYNC_REQUEST;
-            data.client = null;
-            outputStream.writeObject( data );
-            System.out.println( "Sync_Request sended" );
-        } catch (IOException e) {
-            e.printStackTrace();
-            //TODO:Exception
-        }
+        Client cl = new Client( "Adam", "192.168.0.5", 3435 );
+        forceSend( Command.INTRODUCE, cl );
+        forceSend( Command.SYNC_REQUEST, null );
     }
 
     @Override
