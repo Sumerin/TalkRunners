@@ -7,13 +7,30 @@ import java.io.Serializable;
  */
 
 public class Client implements Serializable {
-    String nickname;
-    String ip;
-    int port;
+
+    private String nickname;
+    private String ip;
+    private int port;
 
     public Client(String nickname, String ip, int port) {
         this.nickname = nickname;
         this.ip = ip;
         this.port = port;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getFullIp() {
+        return ip + ":" + port;
     }
 }

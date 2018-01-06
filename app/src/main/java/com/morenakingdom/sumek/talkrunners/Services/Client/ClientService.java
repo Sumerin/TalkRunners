@@ -60,6 +60,9 @@ public class ClientService {
         System.out.println( "Client Added" );
     }
 
+    public List <Client> getClients() {
+        return clients;
+    }
     @Override
     public void finalize() throws Throwable {
         clientServerCommunicationThread.interrupt();

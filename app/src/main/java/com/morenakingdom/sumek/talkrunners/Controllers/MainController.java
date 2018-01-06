@@ -4,9 +4,11 @@ import android.text.Editable;
 
 import com.morenakingdom.sumek.talkrunners.Exceptions.ClientException;
 import com.morenakingdom.sumek.talkrunners.Exceptions.ServerException;
+import com.morenakingdom.sumek.talkrunners.Models.Client;
 import com.morenakingdom.sumek.talkrunners.Services.Server.ServerService;
 
 import java.sql.Connection;
+import java.util.List;
 
 /**
  * Created by sumek on 12/17/17.
@@ -36,5 +38,9 @@ public class MainController {
 
     public void connect(String ip) throws ClientException {
         ClientController.getInstance().connect(ip);
+    }
+
+    public List <Client> getClients() {
+        return ClientController.getInstance().getClients();
     }
 }
