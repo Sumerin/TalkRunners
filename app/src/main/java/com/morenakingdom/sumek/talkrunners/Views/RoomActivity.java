@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -33,77 +34,11 @@ public class RoomActivity extends AppCompatActivity {
 
         list = findViewById( R.id.listView1 );
 
-        //clients = MainController.getInstance().getClients();
-        this.clients = new ArrayList <>();
-
-
-        testData();
+        this.clients = MainController.getInstance().getClients();
 
         adapter = new ClientAdapter( this, this.clients );
 
         list.setAdapter( adapter );
-    }
-
-    private void testData() {
-
-        Thread test = new Thread( () -> {
-            try {
-                Thread.sleep( 3000 );
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            this.clients.add( new Client( "Adam", "192.168.0.1", 1256 ) );
-            this.clients.add( new Client( "Andrzej", "192.168.0.2", 1236 ) );
-            this.clients.add( new Client( "Witek", "192.168.0.4", 1256 ) );
-            this.clients.add( new Client( "Antek", "192.168.0.6", 1256 ) );
-            this.clients.add( new Client( "Alojzy", "192.168.0.9", 1256 ) );
-            this.clients.add( new Client( "Adam", "192.168.0.1", 1256 ) );
-            this.clients.add( new Client( "Andrzej", "192.168.0.2", 1236 ) );
-            this.clients.add( new Client( "Witek", "192.168.0.4", 1256 ) );
-            this.clients.add( new Client( "Antek", "192.168.0.6", 1256 ) );
-            this.clients.add( new Client( "Alojzy", "192.168.0.9", 1256 ) );
-            this.clients.add( new Client( "Adam", "192.168.0.1", 1256 ) );
-            this.clients.add( new Client( "Andrzej", "192.168.0.2", 1236 ) );
-            this.clients.add( new Client( "Witek", "192.168.0.4", 1256 ) );
-            this.clients.add( new Client( "Antek", "192.168.0.6", 1256 ) );
-            this.clients.add( new Client( "Alojzy", "192.168.0.9", 1256 ) );
-            this.clients.add( new Client( "Adam", "192.168.0.1", 1256 ) );
-            this.clients.add( new Client( "Andrzej", "192.168.0.2", 1236 ) );
-            this.clients.add( new Client( "Witek", "192.168.0.4", 1256 ) );
-            this.clients.add( new Client( "Antek", "192.168.0.6", 1256 ) );
-            this.clients.add( new Client( "Alojzy", "192.168.0.9", 1256 ) );
-            this.clients.add( new Client( "Adam", "192.168.0.1", 1256 ) );
-            this.clients.add( new Client( "Andrzej", "192.168.0.2", 1236 ) );
-            this.clients.add( new Client( "Witek", "192.168.0.4", 1256 ) );
-            this.clients.add( new Client( "Antek", "192.168.0.6", 1256 ) );
-            this.clients.add( new Client( "Alojzy", "192.168.0.9", 1256 ) );
-            this.clients.add( new Client( "Adam", "192.168.0.1", 1256 ) );
-            this.clients.add( new Client( "Andrzej", "192.168.0.2", 1236 ) );
-            this.clients.add( new Client( "Witek", "192.168.0.4", 1256 ) );
-            this.clients.add( new Client( "Antek", "192.168.0.6", 1256 ) );
-            this.clients.add( new Client( "Alojzy", "192.168.0.9", 1256 ) );
-            this.clients.add( new Client( "Adam", "192.168.0.1", 1256 ) );
-            this.clients.add( new Client( "Andrzej", "192.168.0.2", 1236 ) );
-            this.clients.add( new Client( "Witek", "192.168.0.4", 1256 ) );
-            this.clients.add( new Client( "Antek", "192.168.0.6", 1256 ) );
-            this.clients.add( new Client( "Alojzy", "192.168.0.9", 1256 ) );
-            this.clients.add( new Client( "Adam", "192.168.0.1", 1256 ) );
-            this.clients.add( new Client( "Andrzej", "192.168.0.2", 1236 ) );
-            this.clients.add( new Client( "Witek", "192.168.0.4", 1256 ) );
-            this.clients.add( new Client( "Antek", "192.168.0.6", 1256 ) );
-            this.clients.add( new Client( "Alojzy", "192.168.0.9", 1256 ) );
-            this.clients.add( new Client( "Adam", "192.168.0.1", 1256 ) );
-            this.clients.add( new Client( "Andrzej", "192.168.0.2", 1236 ) );
-            this.clients.add( new Client( "Witek", "192.168.0.4", 1256 ) );
-            this.clients.add( new Client( "Antek", "192.168.0.6", 1256 ) );
-            this.clients.add( new Client( "Alojzy", "192.168.0.9", 1256 ) );
-
-            Message msg = handler.obtainMessage();
-            msg.what = HandlerMessageType.UPDATE_LISTVIEW;
-            handler.sendMessage( msg );
-        } );
-
-        test.start();
     }
 
     private void initHandler() {
@@ -117,5 +52,11 @@ public class RoomActivity extends AppCompatActivity {
                 super.handleMessage( msg );
             }
         };
+    }
+
+    public void synchronize(View view) {
+        MainController.getInstance().syncClientsList();
+        adapter.clients.addAll( MainController.getInstance().getClients() );
+        adapter.notifyDataSetChanged();
     }
 }

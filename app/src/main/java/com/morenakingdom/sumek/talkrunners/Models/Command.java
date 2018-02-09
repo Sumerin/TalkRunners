@@ -11,6 +11,7 @@ public enum Command implements Serializable {
     SYNC_RESPONSE,
     CONNECT,
     DISCONNECT,
+    PLAY_TO,
+    STOP_MUSIC,
     INTRODUCE
-
 }

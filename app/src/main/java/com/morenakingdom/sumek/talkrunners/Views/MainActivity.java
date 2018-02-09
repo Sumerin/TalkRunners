@@ -25,40 +25,35 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initialize();
-
-        final Button create_btn = findViewById(R.id.createButton);
-
-        create_btn.setOnClickListener(e -> {
-            System.out.println("Create Server Button");
-            try {
-                MainController.getInstance().createServer();
-            } catch (ConnectionException ex) {
-                ex.printStackTrace();
-                builder.setTitle(ex.getClass().getSimpleName())
-                        .setMessage(ex.getMessage())
-                        .show();
-            }
-        });
-
-        final Button join_btn = findViewById(R.id.joinButton);
-
-        join_btn.setOnClickListener(e -> {
-            System.out.println("Join Server Button");
-            DialogFragment t = new ConnectDialog();
-            t.show(getSupportFragmentManager(), "Connect");
-        });
     }
 
     private void initialize() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+            builder = new AlertDialog.Builder( this, android.R.style.Theme_Material_Dialog_Alert );
         } else {
-            builder = new AlertDialog.Builder(this);
+            builder = new AlertDialog.Builder( this );
         }
     }
 
     public void TestActivity(View view) {
-        Intent test = new Intent( getApplicationContext(), RoomActivity.class );
+        Intent test = new Intent( getApplicationContext(), PlayerActivity.class );
         startActivity( test );
+    }
+
+    public void createServerButton(View view) {
+        try {
+            MainController.getInstance().createServer();
+        } catch (ConnectionException ex) {
+            ex.printStackTrace();
+            builder.setTitle( ex.getClass().getSimpleName() )
+                    .setMessage( ex.getMessage() )
+                    .show();
+        }
+    }
+
+    public void joinButton(View view) {
+        System.out.println( "Join Server Button" );
+        DialogFragment t = new ConnectDialog();
+        t.show( getSupportFragmentManager(), "Connect" );
     }
 }

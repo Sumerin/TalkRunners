@@ -2,6 +2,7 @@ package com.morenakingdom.sumek.talkrunners.Services.Client;
 
 import com.morenakingdom.sumek.talkrunners.Exceptions.ClientException;
 import com.morenakingdom.sumek.talkrunners.Models.Client;
+import com.morenakingdom.sumek.talkrunners.Models.Command;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
@@ -25,7 +26,7 @@ public class ClientService {
 
     private Thread clientServerCommunicationThread;
 
-    private ClientCommunicationModule clientServerCommunication;
+    private ClientReceiverDataModule clientServerCommunication;
 
 
     public ClientService() {
@@ -41,10 +42,26 @@ public class ClientService {
 
     }
 
+    void addClient(Client client) {
+        clients.add( client );
+        System.out.println( "Client Added" );
+    }
+
+    public List <Client> getClients() {
+        return clients;
+    }
+
+    @Override
+    public void finalize() throws Throwable {
+        clientServerCommunicationThread.interrupt();
+        super.finalize();
+    }
+
     public void initClientCommunicationModule() throws ClientException {
         try {
-            this.clientServerCommunication = new ClientCommunicationModule( this, commandSocket );
+            this.clientServerCommunication = new ClientReceiverDataModule( this, commandSocket );
             this.clientServerCommunicationThread = new Thread( clientServerCommunication );
+            this.clientServerCommunicationThread.setName( this.clientServerCommunication.getClass().getName() );
             clientServerCommunicationThread.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,20 +70,6 @@ public class ClientService {
         }
 
 
-    }
-
-    public void addClient(Client client) {
-        clients.add( client );
-        System.out.println( "Client Added" );
-    }
-
-    public List <Client> getClients() {
-        return clients;
-    }
-    @Override
-    public void finalize() throws Throwable {
-        clientServerCommunicationThread.interrupt();
-        super.finalize();
     }
 
     public void connect(String ip, int port) {
@@ -80,6 +83,16 @@ public class ClientService {
             e.printStackTrace();
             String message = String.format( "Connection to the server %s failed: %s", ip, e.getMessage() );
             //TODO:Exception
+        }
+    }
+
+    public void synchronizeUsers() {
+        try {
+            clients.clear();
+            clientServerCommunication.forceSend( Command.SYNC_REQUEST, null );
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println( "Excpetion SynchronizeUsers()" );
         }
     }
 }

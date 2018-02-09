@@ -4,15 +4,13 @@ import com.morenakingdom.sumek.talkrunners.Exceptions.ClientException;
 import com.morenakingdom.sumek.talkrunners.Models.Client;
 import com.morenakingdom.sumek.talkrunners.Services.Client.ClientService;
 
-import java.net.InetAddress;
-import java.net.Socket;
 import java.util.List;
 
 /**
  * Created by sumek on 12/17/17.
  */
 
-public class ClientController implements ConnectionController {
+public class ClientController implements ServerController {
 
     private static ClientController instance = null;
 
@@ -54,5 +52,9 @@ public class ClientController implements ConnectionController {
 
     public List <Client> getClients() {
         return service.getClients();
+    }
+
+    public void syncClientsList() {
+        service.synchronizeUsers();
     }
 }

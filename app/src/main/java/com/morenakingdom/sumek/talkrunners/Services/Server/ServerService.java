@@ -40,10 +40,10 @@ public class ServerService {
         }
     }
 
-
     public void initConnectionEstablishedModule() {
         this.connectionEstablished = new ConnectionEstablishedModule( this );
         this.connectionEstablishedThread = new Thread( connectionEstablished );
+        this.connectionEstablishedThread.setName( this.connectionEstablished.getClass().getName() );
         this.connectionEstablishedThread.start();
     }
 
@@ -58,8 +58,9 @@ public class ServerService {
     }
 
     void startCommunication(Socket sock) {
-        ServerCommunicationModule listener = new ServerCommunicationModule( this, sock );
+        ServerReceiverDataModule listener = new ServerReceiverDataModule( this, sock );
         Thread th = new Thread(listener);
+        th.setName( listener.getClass().getName() );
         th.start();
 
         socketListeners.add(th);

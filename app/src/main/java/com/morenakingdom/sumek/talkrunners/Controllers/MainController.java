@@ -1,13 +1,10 @@
 package com.morenakingdom.sumek.talkrunners.Controllers;
 
-import android.text.Editable;
-
 import com.morenakingdom.sumek.talkrunners.Exceptions.ClientException;
 import com.morenakingdom.sumek.talkrunners.Exceptions.ServerException;
 import com.morenakingdom.sumek.talkrunners.Models.Client;
 import com.morenakingdom.sumek.talkrunners.Services.Server.ServerService;
 
-import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -28,7 +25,7 @@ public class MainController {
     }
 
     public void createServer() throws ServerException {
-        createServer(ConnectionController.DEFAULT_PORT);
+        createServer( ServerController.DEFAULT_PORT );
     }
 
     public void createServer(int port) throws ServerException {
@@ -42,5 +39,9 @@ public class MainController {
 
     public List <Client> getClients() {
         return ClientController.getInstance().getClients();
+    }
+
+    public void syncClientsList() {
+        ClientController.getInstance().syncClientsList();
     }
 }
