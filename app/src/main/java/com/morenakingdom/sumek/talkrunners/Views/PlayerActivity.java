@@ -5,9 +5,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.morenakingdom.sumek.talkrunners.Controllers.ClientController;
 import com.morenakingdom.sumek.talkrunners.R;
+import com.morenakingdom.sumek.talkrunners.Services.Client.AudioModule;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.Socket;
 
 public class PlayerActivity extends AppCompatActivity {
+
+    MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,7 +24,8 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     public void playMusic(View view) {
-        MediaPlayer mediaPlayer = MediaPlayer.create( getApplicationContext(), R.raw.simple_music );
-        mediaPlayer.start();
+        AudioModule md = ClientController.getInstance().getAudioModule();
+        md.setContext( getApplicationContext() );
+        new Thread( md ).start();
     }
 }

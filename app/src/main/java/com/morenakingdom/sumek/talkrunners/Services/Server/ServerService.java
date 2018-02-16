@@ -17,7 +17,7 @@ public class ServerService {
 
     ServerSocket serverSocket;
 
-    List<Client> clients = null;
+    List <Client> clients = null; // should be clients dep
 
     private Thread connectionEstablishedThread;
 

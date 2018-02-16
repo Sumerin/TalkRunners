@@ -2,6 +2,7 @@ package com.morenakingdom.sumek.talkrunners.Controllers;
 
 import com.morenakingdom.sumek.talkrunners.Exceptions.ClientException;
 import com.morenakingdom.sumek.talkrunners.Models.Client;
+import com.morenakingdom.sumek.talkrunners.Services.Client.AudioModule;
 import com.morenakingdom.sumek.talkrunners.Services.Client.ClientService;
 
 import java.util.List;
@@ -48,6 +49,10 @@ public class ClientController implements ServerController {
             //TODO: exception
         }
 
+    }
+
+    public AudioModule getAudioModule() {
+        return service.GetAudioModule();
     }
 
     public List <Client> getClients() {

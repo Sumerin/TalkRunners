@@ -15,6 +15,9 @@ import java.net.Socket;
  * Created by sumek on 1/2/18.
  */
 
+/**
+ * Gets the command between server and client.
+ */
 public abstract class ReceiverDataModule implements Runnable {
 
     protected Socket socket;
@@ -22,7 +25,6 @@ public abstract class ReceiverDataModule implements Runnable {
     protected ObjectInputStream inputStream;
 
     protected ObjectOutputStream outputStream;
-
 
     protected ReceiverDataModule(Socket socket) {
         this.socket = socket;
@@ -40,7 +42,6 @@ public abstract class ReceiverDataModule implements Runnable {
             //TODO: Exception
         }
     }
-
 
     public void send(Command header, Client client) throws IOException {
         ControlData data = new ControlData();

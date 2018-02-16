@@ -23,7 +23,7 @@ public class RoomActivity extends AppCompatActivity {
     private ListView list;
     List <Client> clients;
     ClientAdapter adapter;
-    Handler handler;
+    static Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
