@@ -7,18 +7,18 @@ import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.List;
 
+
 /**
+ * Random clas for some randoms stuff testing manually.
  * Created by sumek on 2/9/18.
  */
-
 public class RandomClass {
     public static String getPhoneName() {
         BluetoothAdapter myDevice = BluetoothAdapter.getDefaultAdapter();
-        String deviceName = myDevice.getName();
-        return deviceName;
+        return myDevice.getName();
     }
 
-    public static String getIPAddress(boolean useIPv4) {
+    public static String getIPAddress() {
         try {
             List <NetworkInterface> interfaces = Collections.list( NetworkInterface.getNetworkInterfaces() );
             for ( NetworkInterface intf : interfaces ) {
@@ -26,23 +26,17 @@ public class RandomClass {
                 for ( InetAddress addr : addrs ) {
                     if (!addr.isLoopbackAddress()) {
                         String sAddr = addr.getHostAddress();
-                        //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
-                        boolean isIPv4 = sAddr.indexOf( ':' ) < 0;
 
-                        if (useIPv4) {
-                            if (isIPv4)
-                                return sAddr;
-                        } else {
-                            if (!isIPv4) {
-                                int delim = sAddr.indexOf( '%' ); // drop ip6 zone suffix
-                                return delim < 0 ? sAddr.toUpperCase() : sAddr.substring( 0, delim ).toUpperCase();
-                            }
+                        boolean isIPv4 = sAddr.indexOf( ':' ) < 0;
+                        if (isIPv4) {
+                            return sAddr;
                         }
                     }
                 }
             }
         } catch (Exception ex) {
-        } // for now eat exceptions
+            System.out.println( "Getting Ip Failed." );
+        }
         return "";
     }
 }

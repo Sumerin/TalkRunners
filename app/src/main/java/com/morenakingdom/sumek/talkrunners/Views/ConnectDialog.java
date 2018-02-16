@@ -3,6 +3,7 @@ package com.morenakingdom.sumek.talkrunners.Views;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -14,10 +15,12 @@ import com.morenakingdom.sumek.talkrunners.Exceptions.ClientException;
 import com.morenakingdom.sumek.talkrunners.R;
 
 /**
+ * Prototype till functionality will be completed.
  * Created by sumek on 1/1/18.
  */
-
 public class ConnectDialog extends DialogFragment {
+
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -38,9 +41,7 @@ public class ConnectDialog extends DialogFragment {
                         e.printStackTrace();
                     }
                 })
-                .setNegativeButton(R.string.cancel, (dialog, id) -> {
-                    dialog.cancel();
-                });
+                .setNegativeButton( R.string.cancel, (dialog, id) -> dialog.cancel() );
         return builder.create();
     }
 }

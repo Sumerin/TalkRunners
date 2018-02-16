@@ -2,37 +2,57 @@ package com.morenakingdom.sumek.talkrunners.Services.Server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.morenakingdom.sumek.talkrunners.Exceptions.ServerException;
 import com.morenakingdom.sumek.talkrunners.Models.Client;
+import com.morenakingdom.sumek.talkrunners.Services.Module;
 
 /**
+ * ServerService handles the role of api for whole functionality.
+ * All connection resource and information are stored here.
  * Created by sumek on 1/1/18.
  */
-
 public class ServerService {
 
-    ServerSocket serverSocket;
+    /**
+     * Socket of the server income association queue.
+     */
+    private ServerSocket serverSocket;
 
-    List <Client> clients = null; // should be clients dep
+    /**
+     * List of All clients connected to the server.
+     */
+    private List <Client> clients = null; // should be clients dep
 
-    private Thread connectionEstablishedThread;
-
+    /**
+     * Handle fo the module of incoming association.
+     */
     private ConnectionEstablishedModule connectionEstablished;
 
-    private List<Thread> socketListeners;
+    /**
+     * List of handle to the incoming communication modules.
+     */
+    private List <ServerReceiverDataModule> clientsListeners;
 
+    List <Client> getClients() {
+        return new ArrayList <>( clients );
+    }
 
+    ServerSocket getServerSocket() {
+        return serverSocket;
+    }
+
+    /**
+     * @param port Specified the server queue socket
+     * @throws ServerException Maybe be useful in future.
+     */
     public ServerService(int port) throws ServerException {
         try {
-
             clients = new ArrayList<>();
-            this.socketListeners = new ArrayList<>();
+            this.clientsListeners = new ArrayList <>();
             this.serverSocket = new ServerSocket(port);
-
         } catch (IOException e) {
             e.printStackTrace();
             String message = String.format("Cannot create server: %s", e.getMessage());
@@ -40,32 +60,65 @@ public class ServerService {
         }
     }
 
+    /**
+     * Initialize the listening for connection.
+     */
     public void initConnectionEstablishedModule() {
         this.connectionEstablished = new ConnectionEstablishedModule( this );
-        this.connectionEstablishedThread = new Thread( connectionEstablished );
-        this.connectionEstablishedThread.setName( this.connectionEstablished.getClass().getName() );
-        this.connectionEstablishedThread.start();
-    }
-
-    public void interruptConnectionEstablishedModule() {
-        this.connectionEstablishedThread.interrupt();
-    }
-
-    void addClient(Client client) {
-        clients.add( client );
-
-        System.out.println( "New Client" );
-    }
-
-    void startCommunication(Socket sock) {
-        ServerReceiverDataModule listener = new ServerReceiverDataModule( this, sock );
-        Thread th = new Thread(listener);
-        th.setName( listener.getClass().getName() );
+        Thread th = new Thread( connectionEstablished );
+        th.setName( this.connectionEstablished.getClass().getName() );
         th.start();
 
-        socketListeners.add(th);
+        this.connectionEstablished.setThread( th );
+    }
 
-        System.out.println("New connection established!!!");
+    /**
+     * Add client to the clients collection. Thread save.
+     *
+     * @param client Client connected.
+     */
+    @SuppressWarnings("SynchronizeOnNonFinalField")
+    void addClient(Client client) {
+        synchronized (clients) {
+            clients.add( client );
 
+            System.out.println( "New Client" );
+        }
+    }
+
+    /**
+     * Add handler of the 'client income' module.
+     *
+     * @param listener Module which handles income connection.
+     */
+    void addClientListener(ServerReceiverDataModule listener) {
+        clientsListeners.add( listener );
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        cleanThreads();
+        super.finalize();
+    }
+
+    /**
+     * Release the resources type of thread and sockets (part).
+     */
+    public void cleanThreads() {
+        if (connectionEstablished != null) {
+            connectionEstablished.releaseThread();
+
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (clientsListeners != null) {
+            for ( Module mod : clientsListeners ) {
+                mod.releaseThread();
+            }
+            clientsListeners = null;
+        }
     }
 }

@@ -15,16 +15,16 @@ import com.morenakingdom.sumek.talkrunners.R;
 import java.util.List;
 
 /**
+ * Adapter to handling the listView of clients.
  * Created by sumek on 1/6/18.
  */
-
 public class ClientAdapter extends BaseAdapter {
 
-    Context context;
+    private Context context;
     List <Client> clients;
 
 
-    public ClientAdapter(Context context, List <Client> clients) {
+    ClientAdapter(Context context, List <Client> clients) {
         this.context = context;
         this.clients = clients;
     }
@@ -40,6 +40,7 @@ public class ClientAdapter extends BaseAdapter {
     }
 
     @Override
+    @SuppressWarnings("SuspiciousCall")
     public long getItemId(int position) {
         return clients.indexOf( getItem( position ) );
     }
@@ -47,11 +48,13 @@ public class ClientAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ViewHolder holder = null;
+        ViewHolder holder;
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
         if (convertView == null) {
-            convertView = inflater.inflate( R.layout.client_list_item, null );
+            if (inflater != null) {
+                convertView = inflater.inflate( R.layout.client_list_item, null );
+            }
 
             holder = new ViewHolder();
 

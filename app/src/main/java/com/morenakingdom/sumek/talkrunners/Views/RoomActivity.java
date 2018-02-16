@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -19,6 +20,9 @@ import com.morenakingdom.sumek.talkrunners.Models.Client;
 import com.morenakingdom.sumek.talkrunners.Models.HandlerMessageType;
 import com.morenakingdom.sumek.talkrunners.R;
 
+/**
+ * Prototype till functionality will be completed.
+ */
 public class RoomActivity extends AppCompatActivity {
     private ListView list;
     List <Client> clients;
@@ -41,6 +45,7 @@ public class RoomActivity extends AppCompatActivity {
         list.setAdapter( adapter );
     }
 
+    @SuppressLint("HandlerLeak")// handler reference only here
     private void initHandler() {
         handler = new Handler() {
 
@@ -59,4 +64,8 @@ public class RoomActivity extends AppCompatActivity {
         adapter.clients.addAll( MainController.getInstance().getClients() );
         adapter.notifyDataSetChanged();
     }
+
 }
+
+
+

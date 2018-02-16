@@ -3,9 +3,9 @@ package com.morenakingdom.sumek.talkrunners.Models;
 import java.io.Serializable;
 
 /**
+ * Command(header) of ControlData.
  * Created by sumek on 1/2/18.
  */
-
 public enum Command implements Serializable {
     SYNC_REQUEST,
     SYNC_RESPONSE,

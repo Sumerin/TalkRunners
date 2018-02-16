@@ -4,6 +4,8 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
 
+import com.morenakingdom.sumek.talkrunners.Services.Module;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -13,15 +15,16 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-/**
- * Created by sumek on 1/2/18.
- */
 
-public class AudioModule implements Runnable {
+/**
+ * Prototype of handling the voice income message;
+ *  Created by sumek on 1/2/18.
+ */
+public class AudioModule extends Module {
 
     private final static String TEMP_FILE = "TalkRunnerTemp.dat";
     private final static int BUFFER_SIZE = 16384;
-    private static final int INTIAL_KB_BUFFER = 96 * 10 / 8;
+    private static final int INITIAL_KB_BUFFER = 96 * 10 / 8;
 
     private DatagramSocket udp;
     private File downloadTempFile;
@@ -32,7 +35,7 @@ public class AudioModule implements Runnable {
     private int counter = 0;
     private final Handler handler = new Handler();
 
-    public AudioModule(DatagramSocket udp) {
+    AudioModule(DatagramSocket udp) {
         this.udp = udp;
     }
 
@@ -87,23 +90,21 @@ public class AudioModule implements Runnable {
     }
 
     private void testMediaBuffer() {
-        Runnable updater = new Runnable() {
-            public void run() {
-                if (mediaPlayer == null) {
-                    //  Only create the MediaPlayer once we have the minimum buffered data
-                    if (totalKbRead >= INTIAL_KB_BUFFER) {
-                        try {
-                            startMediaPlayer();
-                        } catch (Exception e) {
-                            System.out.println( "Error copying buffered content. " + e.getMessage() );
-                        }
+        Runnable updater = () -> {
+            if (mediaPlayer == null) {
+                //  Only create the MediaPlayer once we have the minimum buffered data
+                if (totalKbRead >= INITIAL_KB_BUFFER) {
+                    try {
+                        startMediaPlayer();
+                    } catch (Exception e) {
+                        System.out.println( "Error copying buffered content. " + e.getMessage() );
                     }
-                } else if (mediaPlayer.getDuration() - mediaPlayer.getCurrentPosition() <= 1000) {
-                    //  NOTE:  The media player has stopped at the end so transfer any existing buffered data
-                    //  We test for < 1second of data because the media player can stop when there is still
-                    //  a few milliseconds of data left to play
-                    transferBufferToMediaPlayer();
                 }
+            } else if (mediaPlayer.getDuration() - mediaPlayer.getCurrentPosition() <= 1000) {
+                //  NOTE:  The media player has stopped at the end so transfer any existing buffered data
+                //  We test for < 1second of data because the media player can stop when there is still
+                //  a few milliseconds of data left to play
+                transferBufferToMediaPlayer();
             }
         };
         //new Thread(updater).start();
@@ -132,8 +133,8 @@ public class AudioModule implements Runnable {
             //startPlayProgressUpdater();
             //playButton.setEnabled(true);
         } catch (IOException e) {
+            System.out.println( "AudioModule: " + e.getMessage() );
             //Log.e(getClass().getName(), "Error initializing the MediaPlayer.", e);
-            return;
         }
     }
 
@@ -203,7 +204,7 @@ public class AudioModule implements Runnable {
         validateNotInterrupted();
     }
 
-    public void moveFile(File oldLocation, File newLocation) throws IOException {
+    private void moveFile(File oldLocation, File newLocation) throws IOException {
 
         if (oldLocation.exists()) {
             BufferedInputStream reader = new BufferedInputStream( new FileInputStream( oldLocation ) );
@@ -218,11 +219,10 @@ public class AudioModule implements Runnable {
                 throw new IOException( "IOException when transferring " + oldLocation.getPath() + " to " + newLocation.getPath() );
             } finally {
                 try {
-                    if (reader != null) {
-                        writer.close();
-                        reader.close();
-                    }
+                    writer.close();
+                    reader.close();
                 } catch (IOException ex) {
+                    System.out.println( "AudioModule: " + ex.getMessage() );
                     //Log.e(getClass().getName(),"Error closing files when transferring " + oldLocation.getPath() + " to " + newLocation.getPath() );
                 }
             }

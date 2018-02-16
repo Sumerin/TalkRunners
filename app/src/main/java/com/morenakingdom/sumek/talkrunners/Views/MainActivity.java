@@ -14,6 +14,9 @@ import com.morenakingdom.sumek.talkrunners.Controllers.MainController;
 import com.morenakingdom.sumek.talkrunners.Exceptions.ConnectionException;
 import com.morenakingdom.sumek.talkrunners.R;
 
+/**
+ * Prototype till functionality will be completed.
+ */
 public class MainActivity extends AppCompatActivity {
 
 
@@ -36,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void TestActivity(View view) {
-        Intent test = new Intent( getApplicationContext(), PlayerActivity.class );
+        Intent test = new Intent( getApplicationContext(), RoomActivity.class );
         startActivity( test );
     }
 

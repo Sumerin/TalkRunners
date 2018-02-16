@@ -12,27 +12,36 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
+ * base class for the handing income communication between server and client.
  * Created by sumek on 1/2/18.
  */
+public abstract class ReceiverDataModule extends Module {
 
-/**
- * Gets the command between server and client.
- */
-public abstract class ReceiverDataModule implements Runnable {
+    /**
+     * Socket of the connection between server and client.
+     */
+    private Socket socket;
 
-    protected Socket socket;
+    /**
+     * streams from the socket.
+     */
+    private ObjectInputStream inputStream;
+    private ObjectOutputStream outputStream;
 
-    protected ObjectInputStream inputStream;
-
-    protected ObjectOutputStream outputStream;
-
+    /**
+     * Assign and invokes stream initialization.
+     *
+     * @param socket socket for the connection.
+     */
     protected ReceiverDataModule(Socket socket) {
         this.socket = socket;
         initStreams();
     }
 
-
-    protected void initStreams() {
+    /**
+     * Stream initialization
+     */
+    private void initStreams() {
         try {
             this.outputStream = new ObjectOutputStream( new BufferedOutputStream( this.socket.getOutputStream() ) );
             forceSend( Command.CONNECT, null );
@@ -43,6 +52,13 @@ public abstract class ReceiverDataModule implements Runnable {
         }
     }
 
+    /**
+     * Send the packet.
+     *
+     * @param header Type of command to be executed on the other side
+     * @param client Associated client with the command.
+     * @throws IOException Sth is wrong with output.
+     */
     public void send(Command header, Client client) throws IOException {
         ControlData data = new ControlData();
         data.header = header;
@@ -50,6 +66,13 @@ public abstract class ReceiverDataModule implements Runnable {
         outputStream.writeObject( data );
     }
 
+    /**
+     * Force the packet to be send. It use send method
+     *
+     * @param header Type of command to be executed on the other side
+     * @param client Associated client with the command.
+     * @throws IOException Sth is wrong with output
+     */
     public void forceSend(Command header, Client client) throws IOException {
         send( header, client );
         outputStream.flush();
@@ -71,12 +94,17 @@ public abstract class ReceiverDataModule implements Runnable {
 
     }
 
+    /**
+     * Process the incoming data need to be implemented depends on side.
+     * @param data Incoming data
+     */
     protected abstract void processData(ControlData data);
 
 
     @Override
     public void finalize() throws Throwable {
         forceSend( Command.DISCONNECT, null );
+        socket.close();
         super.finalize();
     }
 }

@@ -13,6 +13,9 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.Socket;
 
+/**
+ * Prototype till functionality will be completed.
+ */
 public class PlayerActivity extends AppCompatActivity {
 
     MediaPlayer mediaPlayer;
