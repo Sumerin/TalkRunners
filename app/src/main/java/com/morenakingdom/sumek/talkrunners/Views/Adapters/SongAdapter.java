@@ -61,6 +61,7 @@ public class SongAdapter extends BaseAdapter {
 
             holder.title.setText( song.getTitle() );
             holder.artist.setText( song.getArtist() );
+            convertView.setTag( position );
         }
         return convertView;
     }

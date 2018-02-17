@@ -6,17 +6,33 @@
     android:layout_height="match_parent"
     tools:context="com.morenakingdom.sumek.talkrunners.Views.MusicPlayerActivity">
 
-    <Button
-        android:id="@+id/button"
+    <ImageButton
+        android:id="@+id/playButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Refresh"
-        android:onClick="refreshList" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@android:drawable/ic_media_play"
+        android:onClick="playPauseSong"
+        tools:ignore="contentDescription" />
+
+    <ImageButton
+        android:id="@+id/syncButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_toRightOf="@+id/playButton"
+        app:srcCompat="@android:drawable/ic_popup_sync"
+        android:onClick="refreshList"
+        tools:ignore="contentDescription" />
 
     <ListView
         android:id="@+id/songList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/button"></ListView>
+        android:layout_below="@id/playButton" />
 
 </RelativeLayout>

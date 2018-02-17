@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private AlertDialog.Builder builder;
+    Intent test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void TestActivity(View view) {
-        Intent test = new Intent( getApplicationContext(), MusicPlayerActivity.class );
+        if (test == null) {
+            test = new Intent( getApplicationContext(), MusicPlayerActivity.class );
+        }
         startActivity( test );
     }
 
