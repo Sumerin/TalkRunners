@@ -1,4 +1,4 @@
-package com.morenakingdom.sumek.talkrunners.Views;
+package com.morenakingdom.sumek.talkrunners.Views.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,12 +20,12 @@ import java.util.List;
  */
 public class ClientAdapter extends BaseAdapter {
 
-    private Context context;
+    private LayoutInflater inflater;
     List <Client> clients;
 
 
-    ClientAdapter(Context context, List <Client> clients) {
-        this.context = context;
+    public ClientAdapter(Context context, List <Client> clients) {
+        this.inflater = LayoutInflater.from( context );
         this.clients = clients;
     }
 
@@ -50,10 +50,9 @@ public class ClientAdapter extends BaseAdapter {
 
         ViewHolder holder;
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
         if (convertView == null) {
             if (inflater != null) {
-                convertView = inflater.inflate( R.layout.client_list_item, null );
+                convertView = inflater.inflate( R.layout.client, null );
             }
 
             holder = new ViewHolder();
@@ -61,7 +60,7 @@ public class ClientAdapter extends BaseAdapter {
             holder.username = convertView.findViewById( R.id.username );
             holder.ipAddress = convertView.findViewById( R.id.ipAddress );
 
-            Client client = clients.get( position );
+            Client client = (Client) getItem( position );
 
             holder.username.setText( client.getNickname() );
             holder.ipAddress.setText( client.getFullIp() );

@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void TestActivity(View view) {
-        Intent test = new Intent( getApplicationContext(), RoomActivity.class );
+        Intent test = new Intent( getApplicationContext(), MusicPlayerActivity.class );
         startActivity( test );
     }
 

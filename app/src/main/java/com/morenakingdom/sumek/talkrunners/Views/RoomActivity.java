@@ -1,24 +1,20 @@
 package com.morenakingdom.sumek.talkrunners.Views;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.morenakingdom.sumek.talkrunners.Controllers.MainController;
 import com.morenakingdom.sumek.talkrunners.Models.Client;
 import com.morenakingdom.sumek.talkrunners.Models.HandlerMessageType;
 import com.morenakingdom.sumek.talkrunners.R;
+import com.morenakingdom.sumek.talkrunners.Views.Adapters.ClientAdapter;
 
 /**
  * Prototype till functionality will be completed.
@@ -36,7 +32,7 @@ public class RoomActivity extends AppCompatActivity {
 
         initHandler();
 
-        list = findViewById( R.id.listView1 );
+        list = findViewById( R.id.clientsList );
 
         this.clients = MainController.getInstance().getClients();
 
@@ -61,8 +57,8 @@ public class RoomActivity extends AppCompatActivity {
 
     public void synchronize(View view) {
         MainController.getInstance().syncClientsList();
-        adapter.clients.addAll( MainController.getInstance().getClients() );
-        adapter.notifyDataSetChanged();
+        //adapter.clients.addAll( MainController.getInstance().getClients() );
+        //adapter.notifyDataSetChanged();
     }
 
 }
